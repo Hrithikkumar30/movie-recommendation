@@ -113,3 +113,12 @@ simalirity = cosine_similarity(vectors)
 
 # print(simalirity.shape)
 
+def recommendations(movie):
+    movie_index = new_df[new_df['title']==movie].index[0]
+    distance = simalirity[movie_index]
+    movies_list = sorted(enumerate(distance), key=lambda x: x[1], reverse=True)[1:6]
+    for i in movies_list:
+        # print(i[0])
+        print(new_df['title'][i[0]])
+        
+recommendations('The Dark Knight')
