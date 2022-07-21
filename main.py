@@ -122,3 +122,7 @@ def recommendations(movie):
         print(new_df['title'][i[0]])
         
 recommendations('The Dark Knight')
+
+import pickle 
+pickle.dump(new_df , open('movie_data.pkl','wb'))
+
