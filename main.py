@@ -11,7 +11,7 @@ movies = movies.merge(credits , on='title') # this helps us to merge the two dat
 # print(movies)
 
 movies = movies[["movie_id" , "title" , 'overview' , 'genres' , 'keywords' , 'cast' , 'crew']]
-print(movies.head(2))
+# print(movies.head(2))
 
 
 # print(movies.isnull().sum()) # this will show the number of null values in each column
@@ -33,10 +33,7 @@ def convert(obj):
         L.append(i['name'])
     return L
 
-# import ast
-# print(ast.literal_eval({"id": 28, "name": "Action"}, {"id": 12, "name": "Adventure"}, {"id": 14, "name": "Fantasy"}, {"id": 878, "name": "Science Fiction"}))
-
-print(movies['genres'].apply(convert))
+# print(movies['genres'].apply(convert))
 
 movies['genres'] = movies['genres'].apply(convert)
 
@@ -45,6 +42,10 @@ movies.head()
 
 
 movies['keywords'] = movies['keywords'].apply(convert) #
+
+
+# import ast
+# print(ast.literal_eval({"id": 28, "name": "Action"}, {"id": 12, "name": "Adventure"}, {"id": 14, "name": "Fantasy"}, {"id": 878, "name": "Science Fiction"}))
 
 def convert3(obj):
     L=[]
@@ -63,8 +64,41 @@ movies['cast'] = movies['cast'].apply(convert3)
 def fetch_director(obj):
     L=[]
     for i in ast.literal_eval(obj):
-        if i['job'] ==['Director']:
+        if i['job'] =='Director':
             L.append(i['name'])
-        else:
+          
             break
     return L
+movies['crew'] = movies['crew'].apply(fetch_director) 
+# print(movies['crew'].apply(fetch_director) )
+
+# new_df = movies.copy()
+# print (new_df.head(2))
+
+
+movies['genres'] = movies['genres'].apply(lambda x: [i.replace(" ","") for i in x])
+movies['keywords']= movies['keywords'].apply(lambda x: [i.replace(" ","") for i in x])
+movies['cast'] = movies['cast'].apply(lambda x: [i.replace(" ","")for i in x])
+movies['crew']= movies['crew'].apply(lambda x: [i.replace(" ","")for i in x])
+
+movies['overview'].apply(lambda x: x.split())
+
+movies['genres'] = movies['genres'].apply(lambda x: " ".join(x))
+movies['keywords'] = movies['keywords'].apply(lambda x: " ".join(x))
+movies['cast'] = movies['cast'].apply(lambda x: " ".join(x))
+movies['crew'] = movies['crew'].apply(lambda x: " ".join(x))
+
+
+movies['tags'] = movies['overview']+ movies['genres'] + movies['keywords'] + movies['cast'] + movies['crew']
+
+# print(movies.head(2))
+new_df = movies[['movie_id' , 'title' , 'tags']]
+
+
+# new_df = movies.drop(columns=['overview' , 'genres' , 'keywords' , 'cast' , 'crew'])
+# new_df['tags'] = new_df['tags'].apply(lambda x: " ".join(x)) #this will join all the tags in one column
+
+new_df['tags'] = new_df['tags'].apply(lambda x: x.lower())
+print(new_df.head(2))
+
+#text Vectorization
