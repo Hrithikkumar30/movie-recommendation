@@ -1,3 +1,4 @@
+from turtle import distance
 import pandas as pd 
 import numpy as np
 
@@ -89,7 +90,7 @@ movies['cast'] = movies['cast'].apply(lambda x: " ".join(x))
 movies['crew'] = movies['crew'].apply(lambda x: " ".join(x))
 
 
-movies['tags'] = movies['overview']+ movies['genres'] + movies['keywords'] + movies['cast'] + movies['crew']
+movies['tags'] = movies['overview']+ movies['genres'] + movies[ 'keywords'] + movies['cast'] + movies['crew']
 
 # print(movies.head(2))
 new_df = movies[['movie_id' , 'title' , 'tags']]
@@ -99,6 +100,16 @@ new_df = movies[['movie_id' , 'title' , 'tags']]
 # new_df['tags'] = new_df['tags'].apply(lambda x: " ".join(x)) #this will join all the tags in one column
 
 new_df['tags'] = new_df['tags'].apply(lambda x: x.lower())
-print(new_df.head(2))
+# print(new_df.head(2))
 
 #text Vectorization
+from sklearn.feature_extraction.text import CountVectorizer 
+CV = CountVectorizer(max_features=5000 ,  stop_words='english')
+vectors = CV.fit_transform(new_df['tags']).toarray()
+# print(CV.get_feature_names())
+
+from sklearn.metrics.pairwise import cosine_similarity
+simalirity = cosine_similarity(vectors)
+
+# print(simalirity.shape)
+
